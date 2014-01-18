@@ -1,9 +1,7 @@
-<h1>Registration here :</h1>
+<h1>Registration</h1>
 
 <form method="post">
-  <input placeholder="New user login" type="text" name="login" /><br /><br />
-  <input placeholder="New user password" type="password" name="password" /><br /><br />
-  <input type="submit" name="register" value="submit" />
+  <input placeholder="Login" type="text" name="login" autofocus><br><br>
+  <input placeholder="Password" type="password" name="password"><br><br>
+  <button type="submit" name="register" value="submit">Sign up</button>
 </form>
-
-<a href="index.php?r=main/login">Login Page</a>

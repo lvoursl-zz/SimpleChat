@@ -1,24 +1,20 @@
 <?php
 class MainController extends Controller
-{ 
-
+{
 	public function actionIndex()
 	{
 		if (!Tools::ourIsAuth(Yii::app()->params->cookieName, 
-						   Yii::app()->params->salt, 
-                 		   Yii::app()->params->loggedUserId, 
-                 		   Yii::app()->params->loggedUserName)) {
+				 Yii::app()->params->salt, 
+         Yii::app()->params->loggedUserId, 
+         Yii::app()->params->loggedUserName)) {
 			$this->redirect('index.php?r=main/login');
 		} else {
 			$this->redirect('index.php?r=main/chat');
 		}
-
 	}
 
 	public function actionLogin()
 	{
-		# code...
-		
 		if (isset($_POST['login'])) {
 			$mySql = mysql_connect(Yii::app()->params->server, 
 									Yii::app()->params->dbuser, 
@@ -27,13 +23,13 @@ class MainController extends Controller
 			  
 			$login = $_POST['login'];
 			$password = $_POST['password'];		  
-		  	$password = md5($password . Yii::app()->params->salt);
+		  $password = md5($password . Yii::app()->params->salt);
 		  
 			$sql = "SELECT * FROM users WHERE login='$login'"; 
 			$res = mysql_query($sql, $mySql);
 			$userRow = mysql_fetch_assoc($res);
 			if ($userRow == false) {
-				echo "<P style = 'color:red'>We haven't got this user ;[</P>";
+				echo "<div class=\"info error\">We haven't got this user :[</div>";
 			} else {
 			    $userId = $userRow['id']; 
 			    if ($password == $userRow['password']) {
@@ -49,12 +45,13 @@ class MainController extends Controller
 
 			      $this->redirect('index.php?r=main/chat');
 			    } elseif ($userRow != false) {
-			      echo "<P style = 'color:red'>wrong password</P>";
+			      echo "<div class=\"info error\">Wrong password!</div>";
 			    }
 		 	}
+		} else {
+			echo "<div class=\"info\">You must sign in to view chat!</div>";
 		}
 		$this->render('login');
-		//$this->render('login');
 	}
 
 	public function actionRegister()
@@ -75,9 +72,9 @@ class MainController extends Controller
 			$res = mysql_query($sql, $mySql);
 
 			if($mySql==false) {
-			    echo "ERROR!!!"; 
+			    echo "<div class=\"info error\">ERROR!!!</div>"; 
 			} else {
-			    echo "Register complete successfully";
+			    echo "<div class=\"info success\">Register complete successfully!</div>";
 			} 
 			  
 		    $id = mysql_insert_id($mySql);
@@ -87,7 +84,6 @@ class MainController extends Controller
 
 	public function actionChat()
 	{
-		# code...
 		if (isset($_GET['logout']))
 		{
 		  setcookie(Yii::app()->params->cookieName, '', time() - 86400);
@@ -97,12 +93,12 @@ class MainController extends Controller
 		//fail here cuz we Yii::app()->params->loggedUserName
 		// is empty
 		$testAuth = Tools::ourIsAuth(Yii::app()->params->cookieName, 
-						   Yii::app()->params->salt, 
-                 		   Yii::app()->params->loggedUserId, 
-                 		   Yii::app()->params->loggedUserName);
+						   	Yii::app()->params->salt, 
+                Yii::app()->params->loggedUserId, 
+                Yii::app()->params->loggedUserName);
 
 		//$testAuth = isAuth();
-		if( $testAuth == false) {
+		if($testAuth == false) {
 		  $this->redirect('index.php?r=main/login'); // мы всегда оказываемся в логине, т.к. данные в конфиге (config/main.php) пусты
 		}
 		$mySql = mysql_connect(Yii::app()->params->server, 
@@ -139,12 +135,12 @@ class MainController extends Controller
 		              		  '$image', '$hashMessage') ";
 		      $res = mysql_query($sql, $mySql);
 		    } else {
-		      echo ("<P style = 'color:red'>Stop spam & flood, $name</P>");
+		      echo ("<div class=\"info error\">Stop spam & flood, $name</div>");
 		    }
 		    
 		  
 		  } else {
-		    echo  "<P style = 'color:red'>Incorrect message</P>";
+		    echo  "<div class=\"info error\">Incorrect message</div>";
 		  }
 
 		}		

@@ -1,13 +1,18 @@
-<a href=/new/index.php?r=main/chat&logout><button>logout</button></a>
+<style>
+#content
+{
+  width: 40%;
+}
+</style>
 
 <form method="post" enctype="multipart/form-data">
-  Text: <textarea name="text" cols="20" rows="10"></textarea><br>
-  Image: <input type="file" name="userfile"><br><br>
-	<input type="submit" value="submit">
+  <textarea name="text" cols="20" rows="10" placeholder="Type something..."></textarea><br><br>
+  <input type="file" name="userfile"><br><br>
+	<button type="submit" value="submit">Post</button><br><br>
 </form>
 
-<hr align="left" width="50%">
-
+<hr>
+<div id="messages">
 <?
 if(!$messagesRes) 
 {
@@ -28,24 +33,29 @@ else
 	if (strlen($text) < 50) {
 	  $showText = $text;
 	} else {
-	  $showText = substr($text, 0, 50);
+	  $showText = substr($text, 0, 150);
 	  $tooLongMessage = true;
 	}	
 ?>	
 
-<h3><?= $userRow['login'] ?></h3>
+<h2><?= $userRow['login'] ?></h2>
 
-<p><?= $showText ?><?= $tooLongMessage ? "... <a href=\"message/$messageId\">далее</a>" : '' ?></p>
+<p><?= $showText ?><?= $tooLongMessage ? "... <a href=\"message/$messageId\">more</a>" : '' ?></p>
 <?php if($image != '') {  ?>
-<img src="/<?= $image ?>" width="400" height="200">
+<img src="/<?= $image ?>"><br>
 <?php } ?> 
 
 <br>
 <a href="message/<?= $messageId ?>">Read more</a>
+<br>
+<br>
 
-<hr align="left" width="30%">
+<hr>
 
 <?php
 	}
 }
 
+?>
+
+</div>
